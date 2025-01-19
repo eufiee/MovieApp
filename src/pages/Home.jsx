@@ -1,28 +1,53 @@
 import MovieCard from "../components/Moviecard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { searchMovies, getPopularMovies } from "../services/api";
 import "../css/Home.css";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const movies = [
-    { id: 1, title: "John wick", release_date: "2024" },
-    { id: 2, title: "Terminator", release_date: "1090" },
-    { id: 3, title: "Constantine", release_date: "2001" },
-    { id: 4, title: "Matrix ", release_date: "2012" },
-  ];
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (err) {
+        console.log(err);
+        setError("Fail to load movies...");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handlesearch = () => {
-    alert(searchQuery);
-    setSearchQuery("");
+    loadPopularMovies();
+  }, []);
+
+  const handleSearch = async (e) => {
+    e.PreventDefault();
+    if (!searchQuery.trim()) return;
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      const searchResults = await searchMovies(searchQuery);
+    } catch (err) {
+      console.log(err);
+      setError("failed to search movies ...");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="home">
-      <form onSubmit={handlesearch} className="search-form">
+      <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
           placeholder="Search Movie ..."
           className="search-input"
+          ghghg
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);

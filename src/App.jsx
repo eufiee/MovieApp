@@ -23,7 +23,7 @@ function App() {
 export default App;
 
 {
-  /* {movienumber === 3 ? (
+  /* {movienumber === 3 ? 
   <Moviecard movie={{ title: "JamesBond", release_date: "2024" }} />
 ) : (
   <Moviecard movie={{ title: "Not James BOND", release_date: "2024" }} />
